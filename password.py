@@ -3,11 +3,13 @@ import re
 
 user_regex = re.compile(r'^[a-zA-Z0-9_]{3,15}$')
 
-patterns = [r'\d', r'[A-Z]', r'[a-z]']
-descriptions = ["have at least one number", "have at least one uppercase letter", "have at least one lowercase letter"]
+patterns = [r'\d', r'[A-Z]', r'[a-z]',r'[#$%\^&\*\(\)@!]',r'(He|Ne|Ar|Kr|Xe|Rn)']
+descriptions = ["have at least one number", "have at least one uppercase letter", "have at least one lowercase letter",
+                "have at least one special character ( !, @, #, $, %, ^, &, *, (, or ) )",
+                "contain at least one abbreviation for a noble gas"]
 
 def do_password(pwd:str) -> bool:
-        for i in range(0,2):
+        for i in range(0,5):
             regex = re.compile(patterns[i])
             if regex.search(pwd) == None:
                 print(f"Password must {descriptions[i]}")
@@ -31,4 +33,4 @@ while(True):
     if do_password(pwd):
         break
 
-print(f"\nWelcome to your new account {username}.\n\nYour password will expire in 24 hours.")
+print(f"\nWelcome to your new account {username}.\n\nYour password will expire a week from now.")
