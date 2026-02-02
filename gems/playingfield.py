@@ -10,6 +10,7 @@ logging.basicConfig(filename='gemdrop.log', level=logging.INFO)
 # 0 is the null gem, and 1-4 are the special powers.
 full_palette = [5, 6, 7, 8, 9, 10]
 cursor_position = [0,0]
+score = 0
 
 #############################
 #       Main Game Loop      #
@@ -39,7 +40,7 @@ if __name__ == "__main__":
     while remaining_moves > 0:
         # User, moving cursor, picks two gems to swap
         # If a special gem is activated, it is marked with a negative sign
-        cursor_position = operations.get_user_swap(grid, rows, cols, cursor_position)
+        cursor_position = operations.get_user_swap(remaining_moves, grid, rows, cols, cursor_position)
         remaining_moves -= 1
 
         # After every move the following happens loop the following:
@@ -53,8 +54,9 @@ if __name__ == "__main__":
         # Once the board is free of matches, move counted is decremented
             # If it's zero, break.
 
-    # At the end, count and display the score
-        # May or may not search the grid and activate special gems to add more score
+    # At the end, activate all remaining special gems, then dislay score
+    #operations.activate_all_specials(grid, score)
+    operations.print_end_screen(grid, score)
     
 
     logging.info(f' Reached the end of the code')

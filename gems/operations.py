@@ -1,5 +1,5 @@
 from random import randint, choice
-import logging, math
+import logging, math, os, time
 import readchar
 
 logging.basicConfig(filename='gemdrop.log', level=logging.INFO)
@@ -41,6 +41,15 @@ def print_symbols_with_cursor(grid, cursor_position, select1, select2):
                 desc += small_sprites[grid[j][i]] + " "
         desc += "\n"
     print(desc)
+
+def print_small_everything(grid, cursor_position, select1, select2, moves_remaining, score = 0):
+    print(f"Select two adjacent gems with SPACE to swap them. Moves remaining: {moves_remaining}\n")
+    print_symbols_with_cursor(grid, cursor_position, select1, select2)
+    print(f"\nTotal Score: {score}")
+
+def print_end_screen(grid, total_score = 0):
+    print_colored_symbols(grid)
+    print(f"Congrats! Your total score is {score}")
 
 ##############################
 #          Grid Ops.         #
@@ -87,7 +96,8 @@ def fill_in_holes(grid, palette):
 #       Match Searching      #
 ##############################
 
-# Don't really know hoe to structure this part...
+# Don't really know how to structure this part...
+# Until the grid is done ridding of all matches after a move, use time.sleep to "animate" things(?)
 
 def searchgrid():
     # For anything: matches / marks
@@ -102,7 +112,7 @@ def remove_matches(grid):
 #         User Inputs        # COMPLETE
 ##############################
 
-def get_user_swap(grid, grid_rows : int, grid_cols : int, current_position = [0,0]) -> (int,int):
+def get_user_swap(moves_remaining : int, grid, grid_rows : int, grid_cols : int, current_position = [0,0]) -> (int,int):
     logging.info("Entered get_user_swap")
 
     selected_tile1 = [None,None]
@@ -111,7 +121,8 @@ def get_user_swap(grid, grid_rows : int, grid_cols : int, current_position = [0,
         while True:
 
             # print grid
-            print_symbols_with_cursor(grid, current_position, selected_tile1, selected_tile2)
+            os.system("clear")
+            print_small_everything(grid, current_position, selected_tile1, selected_tile2, moves_remaining)
 
             match (readchar.readkey()):
                 case "w":
