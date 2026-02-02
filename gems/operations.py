@@ -51,6 +51,12 @@ def searchgrid():
     # For anything: matches / marks
     pass
 
+def remove_matches(grid):
+    # will be called once the grid is first made, but before user's first move
+    pass
+
+def 
+
 ##############################
 #         User Inputs        #
 ##############################

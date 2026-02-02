@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     # Loop for remaing moves:
 
-        # User, using sokoban/hexapawn like mvement, picks two gems to swap
+        # User, using sokoban/hexapawn like movement, picks two gems to swap
             # Should probably have user select a single boarder between gems for simplicity
             # This requires a secondary grid with a strange implementation
                 # (Move validation can be added later)
