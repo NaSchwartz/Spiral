@@ -3,6 +3,9 @@ import operations
 size = (6,10) # rows x columns
 
 # the playing field is a **list of columns** that contains ints repersenting gems
+def make_playing_grid(rows:int,cols:int):
+    grid = [ [ 0 for i in range(rows) ] for i in range(cols) ]
+    return grid
 # ints 5 and above are different colors of gems
 # 0 is the null gem, and 1-4 are the special powers.
 
@@ -35,3 +38,16 @@ size = (6,10) # rows x columns
 
 # At the end, count and display the score
     # May or may not search the grid and activate special gems to add more score
+
+
+
+#############################
+#            Main           #
+#############################
+
+if __name__ == "__main__":
+    #print(make_playing_grid(size[0],size[1]))
+
+    #mylist = [3,0,1,4,5,0,0,2,0,1]
+    #print(mylist)
+    #print(operations.percolate_zeros(mylist))
