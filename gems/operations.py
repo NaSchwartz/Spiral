@@ -1,12 +1,54 @@
 from random import randint, choice
-import logging
-#from enum import Enum
+import logging, math
+import readchar
 
 logging.basicConfig(filename='gemdrop.log', level=logging.INFO)
 
 ##############################
+#          Printing          # COMPLETE (unless we want to make a larger and more detailed grid)
+##############################
+
+def print_numeric_grid(grid):
+    desc = ""
+    for i in range(len(grid[0])):
+        for j in range(len(grid)):
+            desc += str(grid[j][i]) + " "
+        desc += "\n"
+    print(desc)
+
+small_sprites = [" ", "-", "|", "~", "*", f"\033[91m@", f"\033[92m#", f"\033[93m$",f"\033[94m%", f"\033[95m&", f"\033[90m?", f"\033[97m"]
+no_color_small_sprites = [" ", "-", "|", "~", "*", "@", "#", "$", "%", "&", "?", "+"]
+
+def print_colored_symbols(grid):
+    desc = ""
+    for i in range(len(grid[0])):
+        for j in range(len(grid)):
+            desc += small_sprites[grid[j][i]] + " "
+        desc += "\n"
+    print(desc)
+
+def print_symbols_with_cursor(grid, cursor_position, select1, select2):
+    desc = ""
+    for i in range(len(grid[0])):
+        for j in range(len(grid)):
+            if [i, j]==cursor_position:
+                desc += small_sprites[11] + "+" + " "
+            elif [i, j] == select1:
+                desc += small_sprites[11] + no_color_small_sprites[grid[j][i]] + " "
+            elif [i, j] == select2: 
+                desc += small_sprites[11] + no_color_small_sprites[grid[j][i]] + " "
+            else:
+                desc += small_sprites[grid[j][i]] + " "
+        desc += "\n"
+    print(desc)
+
+##############################
 #          Grid Ops.         #
 ##############################
+
+def make_playing_grid(rows:int,cols:int):
+    grid = [ [ 0 for i in range(rows) ] for i in range(cols) ]
+    return grid
 
 marked_stack = []
 
@@ -55,47 +97,72 @@ def remove_matches(grid):
     # will be called once the grid is first made, but before user's first move
     pass
 
-def 
 
 ##############################
-#         User Inputs        #
+#         User Inputs        # COMPLETE
 ##############################
 
-def create_user_grid():
-    '''
-    This is what the grid looks like:
-    
-    + - + - + - + - +                                                
-    |   |   |   |   |            |   |   |                0   0   0    
-    + - + - + - + - +          -   -   -   -            0   0   0   0       0 0 0 0 0 0 0 
-    |   |   |   |   |  --->      |   |   |      --->      0   0   0    ---> 0 0 0 0 0 0 0 
-    + - + - + - + - +          -   -   -   -            0   0   0   0       N 0 N 0 N 0 N 
-    |   |   |   |   |            |   |   |                0   0   0    
-    + - + - + - + - +                                   N   N   N   N
-                                                                       
-    
-    ie 3x4 grid of cells becomes 3x7
-    nxm ---> nx(2m-1)
-    This grid is a **list of columns**
-    '''
-    pass
+def get_user_swap(grid, grid_rows : int, grid_cols : int, current_position = [0,0]) -> (int,int):
+    logging.info("Entered get_user_swap")
 
-# a swap is very easy to hard code, but translating it this way is harder
+    selected_tile1 = [None,None]
+    while True:
+        selected_tile2 = [None,None]
+        while True:
 
-def translate_execute_swap(gem_grid, user_grid, user_swap_position:(int,int)):
-    # If the swap contains a special gem (0<int<5) mark it with a negative sign
-    pass
+            # print grid
+            print_symbols_with_cursor(grid, current_position, selected_tile1, selected_tile2)
 
-def valid_swap(grid_to_test) -> bool:
-    # do this at the end, near final draft
+            match (readchar.readkey()):
+                case "w":
+                    current_position[0] = (current_position[0] - 1) % grid_rows
+                case "s":
+                    current_position[0] = (current_position[0] + 1) % grid_rows
+                case "a":
+                    current_position[1] = (current_position[1] - 1) % grid_cols
+                case "d":
+                    current_position[1] = (current_position[1] + 1) % grid_cols
+                case " ":
+                    if selected_tile1 == [None,None]:
+                        # if 1 isn't selected, select it
+                        selected_tile1 = current_position.copy()
+                    elif selected_tile1 == current_position:
+                        # if 1 needs to be toggled, toggle it
+                        selected_tile1 = [None,None]
+                    elif selected_tile2 == [None,None]:
+                        # if 2 isn't selected, select it
+                        selected_tile2 = current_position.copy()
+                        # both tiles selected, break, check if valid swap
+                        break
+                    elif selected_tile2 == current_position:
+                        # if 2 needs to be toggled, toggle it
+                        selected_tile2 = [None,None]
+                    else:
+                        raise Exception("It should not be possible to get this error!")
+                case _:
+                    continue
+            
+        if valid_swap(selected_tile1, selected_tile2, grid):
+            # swap is done, return current cursor position for better flow
+            return current_position
+        # else, not valid, restart just tile 2
 
-    # unsure the most efficient way to do this
-    # Currently: search "new" grid for a match/marked gem, return bool
-    pass
+def valid_swap(position1 : (int,int), position2 : (int,int), grid) -> bool:
+    # Should be impossible for pos1 == pos2 to happen
+    grid_adjacent = abs(position1[0]-position2[0]) + abs(position1[1]-position2[1]) 
+    if grid_adjacent == 1:
+        do_gem_swap(position1, position2, grid)
+        return True
+    return False
 
+def do_gem_swap(position1 : (int,int), position2 : (int,int), grid) -> bool:
+    # First, swap both gems
+    temp = grid[position1[1]][position1[0]]
+    grid[position1[1]][position1[0]] = grid[position2[1]][position2[0]]
+    grid[position2[1]][position2[0]] = temp
 
-##############################
-#        Miscellaneous       #
-##############################
-
-# class for color changes(?)
+    # If either gems are special gems, activate them
+    if grid[position1[1]][position1[0]] <= 4:
+        grid[position1[1]][position1[0]] *= -1
+    if grid[position2[1]][position2[0]] <= 4:
+        grid[position2[1]][position2[0]] *= -1

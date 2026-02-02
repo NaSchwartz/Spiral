@@ -4,40 +4,12 @@ import operations
 # debug | info  | warning | error | critical
 
 logging.basicConfig(filename='gemdrop.log', level=logging.INFO)
-logging.disable(logging.CRITICAL)
-
-# the playing field is a **list of columns** that contains ints repersenting gems
-def make_playing_grid(rows:int,cols:int):
-    grid = [ [ 0 for i in range(rows) ] for i in range(cols) ]
-    return grid
+#logging.disable(logging.CRITICAL)
 
 # ints 5 and above are different colors of gems, stored on the full and sub palettes
-full_palette = [5, 6, 7, 8, 9, 10]
-rows,cols = (6,10) # rows x columns
-
 # 0 is the null gem, and 1-4 are the special powers.
-
-#############################
-#         Printing          #
-#############################
-
-def print_numeric_grid(grid):
-    desc = ""
-    for i in range(len(grid[0])):
-        for j in range(len(grid)):
-            desc += str(grid[j][i]) + " "
-        desc += "\n"
-    print(desc)
-
-small_sprites = [" ", "-", "|", "~", "*", f"\033[91m@", f"\033[92m#", f"\033[93m$", f"\033[94m%", f"\033[95m&", f"\033[90m?"]
-
-def print_colored_symbols(grid):
-    desc = ""
-    for i in range(len(grid[0])):
-        for j in range(len(grid)):
-            desc += small_sprites[grid[j][i]] + " "
-        desc += "\n"
-    print(desc)
+full_palette = [5, 6, 7, 8, 9, 10]
+cursor_position = [0,0]
 
 #############################
 #       Main Game Loop      #
@@ -47,24 +19,28 @@ if __name__ == "__main__":
     
     logging.info(f' Started new run. {datetime.datetime.now()}')
     
-    # First the color palette is shuffled and four-five colors are chosen
+    # Set the number of moves and grid dimensions
+    remaining_moves = 5
+    rows,cols = (6,10) # rows x columns
+    
+    # First the color palette is shuffled and four colors are chosen.
     palette = sample(full_palette,4)
-    # First the grid loads up using the size parameter; lists are initialized
-    grid = make_playing_grid(rows,cols)
-    # using the gem palette, each cells is randomly filled.
+
+    # Next, the grid loads up using the size parameter; lists are initialized
+    grid = operations.make_playing_grid(rows,cols)
+
+    # Using the gem palette, each cell is randomly filled.
     operations.fill_in_holes(grid,palette)
-    print_numeric_grid(grid)
-    print_colored_symbols(grid)
-        # Similar to the move loop below, the grid searches and clear matches
+
+    # Similar to the move loop below, the grid searches and clears matches
+    #operations.remove_matches(grid, palette)
 
     # Loop for remaing moves:
-
-        # User, using sokoban/hexapawn like movement, picks two gems to swap
-            # Should probably have user select a single boarder between gems for simplicity
-            # This requires a secondary grid with a strange implementation
-                # (Move validation can be added later)
-                # If a special gem is activated, it is marked with a negative sign
-        # swap the gems
+    while remaining_moves > 0:
+        # User, moving cursor, picks two gems to swap
+        # If a special gem is activated, it is marked with a negative sign
+        cursor_position = operations.get_user_swap(grid, rows, cols, cursor_position)
+        remaining_moves -= 1
 
         # After every move the following happens loop the following:
             # The board is searched for a match or marked gem (top --> bottom, left --> right) 
@@ -80,4 +56,5 @@ if __name__ == "__main__":
     # At the end, count and display the score
         # May or may not search the grid and activate special gems to add more score
     
+
     logging.info(f' Reached the end of the code')
