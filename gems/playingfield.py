@@ -1,3 +1,5 @@
+import operations
+
 size = (6,10) # rows x columns
 
 # the playing field is a **list of columns** that contains ints repersenting gems
@@ -18,6 +20,7 @@ size = (6,10) # rows x columns
         # This requires a secondary grid with a strange implementation
             # (Move validation can be added later)
             # If a special gem is activated, it is marked with a negative sign
+    # swap the gems
 
     # After every move the following happens loop the following:
         # The board is searched for a match or marked gem (top --> bottom, left --> right) 
