@@ -1,6 +1,8 @@
-from random import randint
-#from enum import Enum
+from random import randint, choice
 import logging
+#from enum import Enum
+
+logging.basicConfig(filename='gemdrop.log', level=logging.INFO)
 
 ##############################
 #          Grid Ops.         #
@@ -9,7 +11,7 @@ import logging
 marked_stack = []
 
 def activate_marked_gem(position:(int,int)):
-    # A stack is nneded to keep track of gems to hit, this function will get much more complicated
+    # A stack is needed to keep track of gems to hit, this function will get much more complicated
     pass
 
 def percolate_zeros(column):
@@ -34,7 +36,10 @@ def move_all_gems_downwards(grid):
             raise Exception("activated gem moved upwards!")
 
 def fill_in_holes(grid, palette):
-    pass
+    for column in grid:
+        for i in range(len(column)):
+            if column[i] == 0:
+                column[i] = choice(palette)
 
 ##############################
 #       Match Searching      #
