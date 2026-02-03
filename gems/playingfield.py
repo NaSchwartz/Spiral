@@ -38,10 +38,10 @@ if __name__ == "__main__":
 
     # Loop for remaing moves:
     while remaining_moves > 0:
+        
         # User, moving cursor, picks two gems to swap
         # If a special gem is activated, it is marked with a negative sign
         cursor_position = operations.get_user_swap(remaining_moves, grid, rows, cols, cursor_position)
-        remaining_moves -= 1
 
         # After every move the following happens loop the following:
             # The board is searched for a match or marked gem (top --> bottom, left --> right) 
@@ -52,7 +52,7 @@ if __name__ == "__main__":
             # All zeros in the grid are randomly filled in with gem palette
         
         # Once the board is free of matches, move counted is decremented
-            # If it's zero, break.
+        remaining_moves -= 1
 
     # At the end, activate all remaining special gems, then dislay score
     #operations.activate_all_specials(grid, score)

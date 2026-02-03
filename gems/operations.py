@@ -160,8 +160,8 @@ def get_user_swap(moves_remaining : int, grid, grid_rows : int, grid_cols : int,
 
 def valid_swap(position1 : (int,int), position2 : (int,int), grid) -> bool:
     # Should be impossible for pos1 == pos2 to happen
-    grid_adjacent = abs(position1[0]-position2[0]) + abs(position1[1]-position2[1]) 
-    if grid_adjacent == 1:
+    manhattan_distance = abs(position1[0]-position2[0]) + abs(position1[1]-position2[1]) 
+    if manhattan_distance == 1:
         do_gem_swap(position1, position2, grid)
         return True
     return False
