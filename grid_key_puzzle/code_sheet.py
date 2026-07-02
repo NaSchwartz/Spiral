@@ -1,6 +1,8 @@
 import os
 from typing import List
 from random import randint
+
+# Note: for 5 digit codes, bitarrays are more memory efficiant that lists when at least ~11% of them are meant to be used.
 from bitarray import bitarray
 
 #############################################
